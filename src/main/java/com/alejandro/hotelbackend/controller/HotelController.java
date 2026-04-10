@@ -7,6 +7,7 @@ import com.alejandro.hotelbackend.dto.ReservationResponse;
 import com.alejandro.hotelbackend.facade.HotelFacade;
 import com.alejandro.hotelbackend.model.RoomType;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -29,8 +30,8 @@ public class HotelController {
 
     @GetMapping("/disponibilidad")
     public AvailabilityResponse getAvailability(@RequestParam RoomType roomType,
-                                                @RequestParam LocalDate checkInDate,
-                                                @RequestParam LocalDate checkOutDate) {
+                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
+                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
         return hotelFacade.getAvailability(roomType, checkInDate, checkOutDate);
     }
 
