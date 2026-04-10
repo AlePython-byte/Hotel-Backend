@@ -17,12 +17,6 @@ public class BillingServiceImpl implements BillingService {
     public Invoice generateInvoice(Reservation reservation) {
         List<InvoiceItem> items = new ArrayList<>();
 
-        double roomCharge = reservation.getTotalPrice();
-        items.add(InvoiceItem.builder()
-                .description("Room charge")
-                .amount(roomCharge)
-                .build());
-
         double servicesTotal = 0.0;
 
         for (AdditionalService additionalService : reservation.getAdditionalServices()) {
@@ -34,12 +28,17 @@ public class BillingServiceImpl implements BillingService {
             servicesTotal += additionalService.getPrice();
         }
 
-        double total = roomCharge + servicesTotal;
+        double roomCharge = reservation.getTotalPrice() - servicesTotal;
+
+        items.add(0, InvoiceItem.builder()
+                .description("Room charge")
+                .amount(roomCharge)
+                .build());
 
         return Invoice.builder()
                 .reservationId(reservation.getId())
                 .items(items)
-                .total(total)
+                .total(reservation.getTotalPrice())
                 .build();
     }
 }
